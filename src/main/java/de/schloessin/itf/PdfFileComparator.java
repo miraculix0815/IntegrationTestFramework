@@ -2,13 +2,13 @@ package de.schloessin.itf;
 
 import java.io.*;
 import java.nio.file.*;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.pdfbox.cos.COSDocument;
 import org.pdfbox.pdfparser.PDFParser;
 import org.pdfbox.pdmodel.PDDocument;
 import org.pdfbox.util.PDFTextStripper;
 
-/** 
+/**
  * created 29.08.2012
  * @author jan
  */
@@ -23,17 +23,18 @@ public class PdfFileComparator implements FileComparator {
       String textOfProcessedPdf = pdfToString(processedFile)
               .replaceAll("\\s+", " ")
               .toUpperCase();
-        
-      Assert.assertEquals(expectedFile.getFileName().toString(),
+
+      Assertions.assertEquals(
               textOfExpectedPdf,
-              textOfProcessedPdf);     
-      
+              textOfProcessedPdf,
+              expectedFile.getFileName().toString());
+
     } catch (IOException ex) {
       throw new RuntimeException(ex);
     }
   }
 
-  private static String pdfToString(Path file) throws IOException {   
+  private static String pdfToString(Path file) throws IOException {
     if (! Files.isRegularFile(file))
       throw new IllegalArgumentException("File " + file.toString() + " does not exist.");
 

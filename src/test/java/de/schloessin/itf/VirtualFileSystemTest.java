@@ -1,20 +1,19 @@
 package de.schloessin.itf;
 
-import de.schloessin.itf.VirtualFileSystem;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
-import static junit.framework.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * created 2013-11-08
  * @author jan
  */
 public class VirtualFileSystemTest {
-  
+
   @Test
   public void testCreationOfAVirtualFile() throws IOException {
     try (VirtualFileSystem fs = new VirtualFileSystem()) {
@@ -23,7 +22,7 @@ public class VirtualFileSystemTest {
       assertTrue(Files.isRegularFile(testfile));
     }
   }
-  
+
   @Test
   public void testCreationOfAVirtualFileWithContent() throws IOException {
     try (VirtualFileSystem fs = new VirtualFileSystem()) {
@@ -34,7 +33,7 @@ public class VirtualFileSystemTest {
       assertEquals(content, Files.readAllLines(testfile, fs.getCharset()));
     }
   }
-  
+
   @Test
   public void testCreationOfAVirtualDirectory() throws IOException {
     try (VirtualFileSystem fs = new VirtualFileSystem()) {
@@ -42,7 +41,7 @@ public class VirtualFileSystemTest {
       assertTrue(Files.isDirectory(fs.createNewDirectory("/testdir1/testdir2")));
     }
   }
-  
+
   @Test
   public void testAutoCreationOfParentDir() throws IOException {
     try (VirtualFileSystem fs = new VirtualFileSystem()) {
@@ -52,7 +51,7 @@ public class VirtualFileSystemTest {
       assertTrue(Files.isDirectory(testfile.getParent()));
     }
   }
-  
+
   @Test
   public void testFindAllFilesInTree() throws IOException {
     try (VirtualFileSystem fs = new VirtualFileSystem()) {
@@ -62,7 +61,7 @@ public class VirtualFileSystemTest {
       files.add(fs.createNewDirectory("/dir2a/dir2b"));
       files.add(fs.createNewFile("/dir2a/dir2b/file2"));
       files.add(fs.createNewFile("/dir1a/dir1b/file3"));
-      
+
       Files.walkFileTree(fs.getRootDirectories().iterator().next(), new SimpleFileVisitor<Path>() {
 
         @Override
@@ -76,14 +75,14 @@ public class VirtualFileSystemTest {
           assertNotNull(files.remove(dir));
           return super.postVisitDirectory(dir, exc);
         }
-        
+
       });
-      
+
       assertTrue(files.isEmpty());
     }
-    
+
   }
-  
+
   @Test
   public void testTruncationWithOpen() throws IOException {
     try (VirtualFileSystem fs = new VirtualFileSystem()) {
@@ -93,5 +92,5 @@ public class VirtualFileSystemTest {
       assertEquals(content, Files.readAllLines(testfile, fs.getCharset()));
     }
   }
-  
+
 }

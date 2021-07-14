@@ -3,17 +3,16 @@ package de.schloessin.itf;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
-import junit.framework.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * created 29.08.2012
  * @author jan
  */
 public class TextFileComparator implements FileComparator {
-  
+
   private final Charset charset;
   private final List<Pattern> linesToIgnore = new ArrayList<>();
   private boolean trimLiniesBeforeCompare = false;
@@ -25,7 +24,7 @@ public class TextFileComparator implements FileComparator {
   public TextFileComparator(Charset charset) {
     this.charset = charset;
   }
-  
+
   public TextFileComparator ignoreLiniesWhichAreMatchedBy(Pattern toIgnore) {
     linesToIgnore.add(toIgnore);
     return this;
@@ -51,25 +50,25 @@ public class TextFileComparator implements FileComparator {
             actualLine = actualLine.trim();
           }
         }
-          
-        Assert.assertEquals(
-                "File " + expectedFile + ":" + expected.getLineNumber()
-                + " differs from " + actualFile + ":" + actual.getLineNumber(),
+
+        Assertions.assertEquals(
                 expectedLine,
-                actualLine);
-        
+                actualLine,
+                "File " + expectedFile + ":" + expected.getLineNumber()
+                + " differs from " + actualFile + ":" + actual.getLineNumber());
+
         expectedLine = getNextLineToTakenCareOf(expected);
         actualLine = getNextLineToTakenCareOf(actual);
       }
     }
   }
-  
+
   private String getNextLineToTakenCareOf(LineNumberReader processed) throws IOException {
     String line;
-    
+
     do line = processed.readLine();
     while (line != null && ! isToBeTakenCareOf(line));
-    
+
     return line;
   }
 
@@ -77,7 +76,7 @@ public class TextFileComparator implements FileComparator {
     for (Pattern p : linesToIgnore)
       if (p.matcher(line).matches())
         return false;
-    
+
     return true;
   }
 
